@@ -202,16 +202,24 @@ body{
 .top-icon-btn svg{width:18px;height:18px;}
 
 /* Top bar hidden state */
-.top-bar{transition:transform .25s cubic-bezier(.4,0,.2,1), min-height .25s;}
+.top-bar{
+  transition:height .25s cubic-bezier(.4,0,.2,1),
+             padding .25s cubic-bezier(.4,0,.2,1),
+             opacity .2s;
+  overflow:hidden;
+}
 .top-bar.hidden{
-  transform:translateY(-100%);
-  min-height:0;
+  height:0 !important;
+  min-height:0 !important;
+  padding-top:0 !important;
+  padding-bottom:0 !important;
+  opacity:0;
   pointer-events:none;
   border:none;
 }
-/* When top bar is hidden, cat-bar slides to top:0 */
-.top-bar.hidden ~ .cat-bar{top:0;}
-.top-bar.hidden ~ .timer-bar{top:var(--catbar-h);}
+/* When top bar is hidden, sticky tops adjust */
+.top-bar.hidden ~ .cat-bar{ top:0; }
+.top-bar.hidden ~ .timer-bar{ top:var(--catbar-h); }
 
 /* Small reveal button when top bar is hidden */
 .topbar-reveal{
@@ -959,11 +967,21 @@ select.form-input{
   transition:opacity .2s;
 }
 .hud-toggle:active{opacity:.6;}
-.bottom-bar.hidden{
-  transform:translateY(100%);
-  pointer-events:none;
+.bottom-bar{
+  transition:height .25s cubic-bezier(.4,0,.2,1),
+             padding .25s cubic-bezier(.4,0,.2,1),
+             opacity .2s;
+  overflow:hidden;
 }
-.bottom-bar{transition:transform .25s cubic-bezier(.4,0,.2,1);}
+.bottom-bar.hidden{
+  height:0 !important;
+  min-height:0 !important;
+  padding-top:0 !important;
+  padding-bottom:0 !important;
+  opacity:0;
+  pointer-events:none;
+  border:none;
+}
 
 /* Small phones */
 @media(max-width:375px){
@@ -2177,21 +2195,27 @@ function resetCategory(){
 let topBarVisible = true;
 function toggleTopBar(){
   topBarVisible = !topBarVisible;
-  const bar = document.getElementById('top-bar');
+  const bar    = document.getElementById('top-bar');
   const reveal = document.getElementById('topbar-reveal');
   const catBar = document.getElementById('cat-bar');
   const timerBar = document.getElementById('timer-bar');
 
   if(topBarVisible){
+    // Show — restore height then remove class
+    bar.style.height = '';
     bar.classList.remove('hidden');
     reveal.classList.remove('show');
     catBar.style.top = 'var(--topbar-h)';
-    timerBar.style.top = 'calc(var(--topbar-h) + var(--catbar-h))';
+    if(timerBar) timerBar.style.top = 'calc(var(--topbar-h) + var(--catbar-h))';
   } else {
-    bar.classList.add('hidden');
-    reveal.classList.add('show');
-    catBar.style.top = '0';
-    timerBar.style.top = 'var(--catbar-h)';
+    // Hide — pin height first so transition has a start value, then collapse
+    bar.style.height = bar.offsetHeight + 'px';
+    requestAnimationFrame(()=>{
+      bar.classList.add('hidden');
+      reveal.classList.add('show');
+      catBar.style.top = '0';
+      if(timerBar) timerBar.style.top = 'var(--catbar-h)';
+    });
   }
 }
 
@@ -2316,13 +2340,17 @@ function toggleHud(){
   const bar = document.getElementById('bottom-bar');
   const btn = document.getElementById('hud-toggle');
   if(hudVisible){
+    bar.style.height = '';
     bar.classList.remove('hidden');
     btn.textContent = '⌃';
     btn.style.bottom = 'calc(max(76px, env(safe-area-inset-bottom) + 62px))';
   } else {
-    bar.classList.add('hidden');
-    btn.textContent = '⌄';
-    btn.style.bottom = 'max(14px, env(safe-area-inset-bottom))';
+    bar.style.height = bar.offsetHeight + 'px';
+    requestAnimationFrame(()=>{
+      bar.classList.add('hidden');
+      btn.textContent = '⌄';
+      btn.style.bottom = 'max(14px, env(safe-area-inset-bottom))';
+    });
   }
 }
 
