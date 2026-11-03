@@ -1701,6 +1701,19 @@ function getCatColor(cat){
   return CAT_COLORS[idx<0?0:idx];
 }
 
+function applyNumBadgeStyle(el, color){
+  if(!el) return;
+  const c = (!color || color === '#555') ? '#888888' : color;
+  const r = parseInt(c.slice(1,3), 16);
+  const g = parseInt(c.slice(3,5), 16);
+  const b = parseInt(c.slice(5,7), 16);
+  // Same three values as the body part tag, all derived from the one category color.
+  // Only color/background/border are set, so the badge keeps its existing size and shape.
+  el.style.color = c;
+  el.style.background = `rgba(${r},${g},${b},0.17)`;
+  el.style.border = `1px solid rgba(${r},${g},${b},0.32)`;
+}
+
 function applyTagStyle(el, color){
   if(!el) return;
   const c = (!color || color === '#555') ? '#888888' : color;
@@ -1855,13 +1868,17 @@ function buildExCard(ex,num){
     <div class="streak-row">
       <div class="streak-bars">${bars}</div>
       ${fireStr}
-      <button class="progress-btn${isReady?' ready':''}" onclick="openProgress('${ex.id}')">${isReady?'🌈 Progress ↑':'Progress ↑'}</button>
+      <button class="progress-btn${isReady?' ready':''}" onclick="openProgress('${ex.id}')">Progress ↑</button>
     </div>
     <div class="sets-row">${setsHTML}</div>
   `;
 
   // Apply badge style — color drives text, bg, border all from one value
   applyTagStyle(card.querySelector('#tag-'+ex.id), color);
+
+  // Number badge uses the same category-color styling as the body part tag.
+  // Skipped when the exercise is fully done so the green completed state still shows.
+  if(!allDone) applyNumBadgeStyle(card.querySelector('.ex-num'), color);
 
   // ── Card-level hold: logs next pending set ──
   setupCardHold(card, ex.id);
