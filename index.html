@@ -7,9 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0f0f13">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="SimpleWorkout">
-<meta name="application-name" content="SimpleWorkout">
-<title>SimpleWorkout</title>
+<title>Workout</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -985,33 +983,6 @@ select.form-input{
   border:none;
 }
 
-/* ── Cloud sync indicator (top bar) ── */
-.sync-btn{position:relative;}
-.sync-btn svg{width:18px;height:18px;}
-.sync-dot{
-  position:absolute;right:6px;bottom:6px;
-  width:8px;height:8px;border-radius:50%;
-  background:#555;border:1.5px solid var(--bg);
-}
-.sync-btn[data-s="synced"] .sync-dot{background:#22c55e;}
-.sync-btn[data-s="pending"] .sync-dot{background:#f59e0b;}
-.sync-btn[data-s="syncing"] .sync-dot{background:#4f8dff;animation:timerThrob 1s ease-in-out infinite;}
-.sync-btn[data-s="offline"] .sync-dot{background:#6b7280;}
-.sync-btn[data-s="error"] .sync-dot,
-.sync-btn[data-s="verify"] .sync-dot{background:#ef4444;}
-.sync-btn[data-s="off"] .sync-dot{display:none;}
-.sync-btn[data-s="off"]{opacity:.55;}
-
-/* Account sheet */
-.acct-box{margin:14px 20px 0;padding:14px;border-radius:12px;background:var(--bg2);border:1px solid var(--border);}
-.acct-email{font-size:14px;font-weight:600;color:var(--text);word-break:break-all;}
-.acct-status{font-size:12px;color:var(--text3);margin-top:4px;line-height:1.5;}
-.acct-note{padding:10px 20px 0;font-size:11px;color:var(--text3);line-height:1.6;}
-.acct-link{background:none;border:none;color:var(--accent);font-size:12px;font-family:Inter,sans-serif;cursor:pointer;padding:10px 20px 0;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
-.btn-google{background:#fff;color:#1f1f1f;display:flex !important;align-items:center;justify-content:center;gap:10px;}
-.or-sep{display:flex;align-items:center;gap:10px;padding:16px 20px 0;font-size:11px;color:var(--text3);}
-.or-sep::before,.or-sep::after{content:'';flex:1;height:1px;background:var(--border);}
-
 /* Small phones */
 @media(max-width:375px){
   .top-bar{padding-left:12px;padding-right:12px;}
@@ -1035,10 +1006,6 @@ select.form-input{
   <div class="top-bar" id="top-bar">
     <span class="app-title" id="app-title-display">My Workout</span>
     <button class="top-icon-btn" onclick="toggleTopBar()" title="Hide top bar" style="width:32px;height:32px;font-size:13px;opacity:0.5;">▲</button>
-    <button class="top-icon-btn sync-btn" id="sync-btn" data-s="off" onclick="openAccount()" aria-label="Account and sync">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
-      <span class="sync-dot"></span>
-    </button>
     <button class="top-icon-btn" onclick="openSettings()" aria-label="Settings">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="3"/>
@@ -1133,17 +1100,6 @@ select.form-input{
     <div style="height:16px"></div>
 
     <div class="settings-list">
-      <!-- Account & sync -->
-      <div class="settings-item" onclick="closeOverlay('settings-overlay');openAccount()">
-        <div class="si-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
-        </div>
-        <div class="si-text">
-          <div class="si-title">Account &amp; Sync</div>
-          <div class="si-sub" id="settings-account-preview">Not signed in — saved on this device</div>
-        </div>
-        <div class="si-arrow">›</div>
-      </div>
       <!-- App title -->
       <div class="settings-item" onclick="openTitleEdit()">
         <div class="si-icon">
@@ -1210,28 +1166,6 @@ select.form-input{
         </div>
         <div class="si-arrow">›</div>
       </div>
-      <!-- Backup -->
-      <div class="settings-item" onclick="exportBackup()">
-        <div class="si-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        </div>
-        <div class="si-text">
-          <div class="si-title">Export Backup</div>
-          <div class="si-sub">Download all your data as a file</div>
-        </div>
-        <div class="si-arrow">›</div>
-      </div>
-      <div class="settings-item" onclick="document.getElementById('import-file').click()">
-        <div class="si-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        </div>
-        <div class="si-text">
-          <div class="si-title">Import Backup</div>
-          <div class="si-sub">Restore from a backup file</div>
-        </div>
-        <div class="si-arrow">›</div>
-      </div>
-      <input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="importBackup(this)">
     </div>
     <div style="height:8px"></div>
   </div>
@@ -1390,60 +1324,6 @@ select.form-input{
     <button class="sheet-close" onclick="closeOverlay('theme-overlay')">✕</button>
     <div style="height:16px"></div>
     <div style="padding:0 20px 20px;display:flex;flex-direction:column;gap:10px" id="theme-list"></div>
-  </div>
-</div>
-
-<!-- ══ ACCOUNT & SYNC SHEET ══ -->
-<div class="overlay" id="account-overlay" onclick="handleOverlayClick(event,'account-overlay')">
-  <div class="sheet sheet-inner">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">Account &amp; Sync</div>
-    <button class="sheet-close" onclick="closeOverlay('account-overlay')">✕</button>
-    <div id="acct-body"></div>
-    <div style="height:12px"></div>
-  </div>
-</div>
-
-<!-- ══ FIRST SIGN-IN: CLOUD ALREADY HAS DATA ══ -->
-<div class="overlay" id="link-overlay">
-  <div class="sheet sheet-inner">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">Your account already has data</div>
-    <div style="padding:10px 20px 0;font-size:13px;color:var(--text2);line-height:1.6">
-      This account has workouts saved in the cloud, and this device has its own workouts too. What should happen?
-    </div>
-    <button class="action-btn btn-primary" onclick="resolveLinkChoice('replace')">Use cloud data on this device</button>
-    <div class="acct-note" style="padding-top:6px">Recommended. This device's data is replaced by your account's data.</div>
-    <button class="action-btn btn-secondary" onclick="resolveLinkChoice('merge')">Combine both</button>
-    <div class="acct-note" style="padding-top:6px">Keeps exercises from both. Same exercise edited on both → newest wins.</div>
-    <button class="action-btn btn-secondary" onclick="resolveLinkChoice('cancel')" style="margin-top:10px">Cancel and sign out</button>
-    <div style="height:12px"></div>
-  </div>
-</div>
-
-<!-- ══ DELETE ACCOUNT CONFIRM ══ -->
-<div class="overlay" id="delacct-overlay" onclick="handleOverlayClick(event,'delacct-overlay')">
-  <div class="sheet sheet-inner">
-    <div class="sheet-handle"></div>
-    <div style="padding:20px 20px 0;text-align:center">
-      <div style="font-size:36px;margin-bottom:10px">⚠️</div>
-      <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px">Delete account and cloud data?</div>
-      <div style="font-size:12px;color:var(--text3);line-height:1.6">Your account and every workout saved in the cloud will be permanently deleted. This cannot be undone.</div>
-    </div>
-    <div class="form-group" id="delacct-pw-wrap" style="display:none">
-      <label class="form-label">Confirm your password</label>
-      <input class="form-input" id="delacct-pw" type="password" autocomplete="current-password">
-    </div>
-    <label class="toggle-row" style="cursor:pointer">
-      <div class="toggle-label-wrap">
-        <div class="toggle-main">Also erase this device</div>
-        <div class="toggle-sub">Off = your workouts stay on this phone</div>
-      </div>
-      <span class="tog"><input type="checkbox" id="delacct-local"><span class="tog-slider"></span></span>
-    </label>
-    <button class="action-btn btn-danger" onclick="confirmDeleteAccount()">Delete permanently</button>
-    <button class="action-btn btn-secondary" onclick="closeOverlay('delacct-overlay')" style="margin-top:8px">Cancel</button>
-    <div style="height:12px"></div>
   </div>
 </div>
 
@@ -1776,170 +1656,19 @@ function initDefaults(){
     lastLoggedDate:null,
     lastTouched:false,
   }));
-  // Marks untouched starter data. It is never uploaded over real cloud data.
-  state.pristine = true;
-}
-
-// ══════════════════════════════════════════════
-// DATA MODEL + CHANGE TRACKING (for cloud sync)
-// ══════════════════════════════════════════════
-// Each exercise keeps:
-//   log:          { 'YYYY-MM-DD': { s:[true,false,…], t:<ms changed> } }  ← daily history
-//   streakBase:   streak carried over from before the log existed
-//   progressedAt: ms of last progression (streak counts completed days after it)
-//   updatedAt:    ms of last change (newest wins when syncing)
-// setsLoggedToday / streak are kept as on-screen copies derived from the log.
-const SYNC_KEY = 'workout_app_v1_sync';
-let syncMeta = { linkedUid:null, fp:{}, settingsFp:null, dirty:{}, settingsDirty:false, tomb:{}, lastSync:0 };
-
-function loadSyncMeta(){
-  try{
-    const raw = localStorage.getItem(SYNC_KEY);
-    if(raw) syncMeta = Object.assign(syncMeta, JSON.parse(raw));
-  }catch(e){}
-}
-function persistSyncMeta(){
-  try{ localStorage.setItem(SYNC_KEY, JSON.stringify(syncMeta)); }catch(e){}
-}
-
-function sameArr(a,b){
-  if(!Array.isArray(a)||!Array.isArray(b)||a.length!==b.length) return false;
-  for(let i=0;i<a.length;i++) if(!!a[i]!==!!b[i]) return false;
-  return true;
-}
-function isCompleteDay(s){ return Array.isArray(s) && s.length>0 && s.every(Boolean); }
-
-function computeStreak(ex){
-  let n = ex.streakBase||0;
-  const since = ex.progressedAt||0;
-  const log = ex.log||{};
-  for(const d in log){
-    const e = log[d];
-    if(e && e.t > since && isCompleteDay(e.s)) n++;
-  }
-  return n;
-}
-
-// Copy today's on-screen sets into the log (only if they belong to today)
-function syncTodayToLog(ex){
-  const today = todayStr();
-  if(ex._bufDay !== today || !Array.isArray(ex.setsLoggedToday)) return;
-  if(!ex.log) ex.log = {};
-  const buf = ex.setsLoggedToday.map(Boolean);
-  const e = ex.log[today];
-  if(e){ if(!sameArr(e.s, buf)) ex.log[today] = { s:buf, t:Date.now() }; }
-  else if(buf.some(Boolean)) ex.log[today] = { s:buf, t:Date.now() };
-}
-
-// Upgrade older saved data to the current shape. Safe to run every load.
-function migrateState(){
-  if(!state || typeof state!=='object') return;
-  if(!Array.isArray(state.exercises)) state.exercises = [];
-  if(!Array.isArray(state.categories)) state.categories = [];
-  if(!state.catColors) state.catColors = {};
-  const today = todayStr();
-  state.exercises.forEach(ex=>{
-    if(!ex.id) ex.id = generateId();
-    if(!ex.log){
-      ex.log = {};
-      let base = ex.streak||0;
-      const buf = Array.isArray(ex.setsLoggedToday) ? ex.setsLoggedToday.map(Boolean) : [];
-      if(ex.lastLoggedDate && buf.some(Boolean)){
-        if(ex.lastLoggedDate===today){
-          // Today's sets count toward the streak through the log from now on
-          ex.log[today] = { s:buf, t:Date.now() };
-          if(isCompleteDay(buf) && buf.length===ex.sets) base = Math.max(0, base-1);
-        } else {
-          ex.log[ex.lastLoggedDate] = { s:buf, t:0 }; // history only, already in streakBase
-        }
-      }
-      ex.streakBase = base;
-    }
-    if(typeof ex.streakBase!=='number') ex.streakBase = 0;
-    if(typeof ex.progressedAt!=='number') ex.progressedAt = 0;
-    if(!Array.isArray(ex.progressHistory)) ex.progressHistory = [];
-    ex.streak = computeStreak(ex);
-  });
-}
-
-// What gets synced for one exercise (no on-screen-only fields)
-function exPayload(ex){
-  return JSON.parse(JSON.stringify({
-    name:ex.name||'', cat:ex.cat||'Uncategorized', tag:ex.tag||'', weight:ex.weight||'',
-    sets:ex.sets||3, repRange:ex.repRange||'', rest:ex.rest||90,
-    uniformReps:ex.uniformReps||10, customReps:!!ex.customReps, perSetReps:ex.perSetReps||[],
-    progressHistory:ex.progressHistory||[], log:ex.log||{},
-    streakBase:ex.streakBase||0, progressedAt:ex.progressedAt||0,
-  }));
-}
-// What gets synced for settings (activeCat and timer slots stay per-device)
-function settingsPayload(){
-  return JSON.parse(JSON.stringify({
-    title:state.title||'My Workout', theme:state.theme||'fullblack',
-    streakThreshold:state.streakThreshold||7,
-    categories:state.categories||[], catColors:state.catColors||{},
-    timersEnabled: state.timers ? !!state.timers.enabled : true,
-    alarm: (state.timers && state.timers.alarm) || null,
-    order: state.exercises.map(e=>e.id),
-  }));
-}
-
-// Compare everything with what was last synced; stamp and flag what changed.
-function trackChanges(){
-  const now = Date.now();
-  const seen = {};
-  state.exercises.forEach(ex=>{
-    seen[ex.id] = true;
-    syncTodayToLog(ex);
-    ex.streak = computeStreak(ex);
-    const fp = canon(exPayload(ex));
-    const had = Object.prototype.hasOwnProperty.call(syncMeta.fp, ex.id);
-    if(syncMeta.fp[ex.id] !== fp){
-      if(had || !ex.updatedAt) ex.updatedAt = now;
-      if(had) state.pristine = false;
-      syncMeta.fp[ex.id] = fp;
-      syncMeta.dirty[ex.id] = 1;
-      delete syncMeta.tomb[ex.id];
-    }
-  });
-  // Exercises that disappeared → deletion records so other devices remove them too
-  Object.keys(syncMeta.fp).forEach(id=>{
-    if(!seen[id]){
-      delete syncMeta.fp[id];
-      syncMeta.tomb[id] = now;
-      syncMeta.dirty[id] = 1;
-      state.pristine = false;
-    }
-  });
-  const sfp = canon(settingsPayload());
-  if(syncMeta.settingsFp !== sfp){
-    if(syncMeta.settingsFp!==null) { state.settingsUpdatedAt = now; state.pristine = false; }
-    else if(!state.settingsUpdatedAt) state.settingsUpdatedAt = now;
-    syncMeta.settingsFp = sfp;
-    syncMeta.settingsDirty = true;
-  }
 }
 
 // ── Persistence ──
-// Always saves to the phone first; the cloud layer (if signed in) uploads after.
-function persistState(){
-  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}
-  persistSyncMeta();
-}
 function saveState(){
-  try{ trackChanges(); }catch(e){}
-  persistState();
-  if(typeof window.cloudKick==='function') window.cloudKick();
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}
 }
 function loadState(){
-  loadSyncMeta();
   try{
     const raw=localStorage.getItem(STORAGE_KEY);
-    if(!raw){initDefaults();migrateState();saveState();return;}
+    if(!raw){initDefaults();saveState();return;}
     const s=JSON.parse(raw);
     state=s;
-    migrateState();
-  }catch(e){initDefaults();migrateState();saveState();}
+  }catch(e){initDefaults();saveState();}
 }
 
 // ── Today check ──
@@ -1952,18 +1681,12 @@ function todayStr(d=new Date()){
   return `${y}-${m}-${day}`;
 }
 
-// Rebuild today's on-screen sets from the daily log (also picks up synced changes).
-// A new day simply has no log entry yet, so every set starts unticked.
 function ensureDailyReset(ex){
   const today=todayStr();
-  const n=ex.sets||0;
-  const e=ex.log&&ex.log[today];
-  const s=new Array(n).fill(false);
-  if(e&&Array.isArray(e.s)) for(let i=0;i<n;i++) s[i]=!!e.s[i];
-  ex.setsLoggedToday=s;
-  ex._bufDay=today;
-  if(e) ex.lastLoggedDate=today;
-  ex.streak=computeStreak(ex);
+  if(ex.lastLoggedDate!==today){
+    // New day — check if yesterday we completed all sets (streak already counted on completion)
+    ex.setsLoggedToday=new Array(ex.sets).fill(false);
+  }
 }
 
 // ══════════════════════════════════════════════
@@ -2391,12 +2114,11 @@ function logSet(exId,setIdx){
 
   ex.setsLoggedToday[setIdx]=true;
   ex.lastLoggedDate=todayStr();
-  syncTodayToLog(ex);
-  ex.streak=computeStreak(ex); // completing today adds +1 via the log
 
   // Check if all sets done → streak +1
   const allDone=ex.setsLoggedToday.every(Boolean)&&ex.setsLoggedToday.length===ex.sets;
   if(allDone){
+    ex.streak=(ex.streak||0)+1;
     showToast(`🔥 ${ex.name} — streak +1! (${ex.streak} days)`);
   } else {
     const done=ex.setsLoggedToday.filter(Boolean).length;
@@ -2423,16 +2145,16 @@ function undoSet(exId,setIdx){
   if(!ex) return;
   ensureDailyReset(ex);
 
-  // If previously all done, the streak drops back (it is derived from the log)
+  // If previously all done, un-streak
   const wasDone=ex.setsLoggedToday&&ex.setsLoggedToday.every(Boolean)&&ex.setsLoggedToday.length===ex.sets;
-  if(ex.setsLoggedToday) ex.setsLoggedToday[setIdx]=false;
-  syncTodayToLog(ex);
-  ex.streak=computeStreak(ex);
-  if(wasDone){
+  if(wasDone&&(ex.streak||0)>0){
+    ex.streak--;
     showToast(`Set undone — streak adjusted`);
   } else {
     showToast(`Set ${setIdx+1} removed`);
   }
+
+  if(ex.setsLoggedToday) ex.setsLoggedToday[setIdx]=false;
   saveState();
   updateCardUI(ex);
   checkCategoryCompletion();
@@ -2483,7 +2205,6 @@ function renderAll(){
 function resetCategory(){
   const catExs=state.activeCat==='All'?state.exercises:state.exercises.filter(e=>e.cat===state.activeCat);
   catExs.forEach(ex=>{
-    ensureDailyReset(ex);
     ex.setsLoggedToday=new Array(ex.sets).fill(false);
     ex.lastTouched=false;
   });
@@ -2869,7 +2590,6 @@ function catOptView(){
 function catOptReset(){
   const exs = state.exercises.filter(e=>e.cat===catOptsTarget);
   exs.forEach(ex=>{
-    ensureDailyReset(ex);
     ex.setsLoggedToday = new Array(ex.sets).fill(false);
     ex.lastTouched = false;
   });
@@ -3108,8 +2828,6 @@ function saveExercise(){
   if(editingExId){
     const ex=state.exercises.find(e=>e.id===editingExId);
     if(!ex) return;
-    ensureDailyReset(ex);
-    const setsChanged = ex.sets!==sets;
     ex.name=name;
     ex.cat=document.getElementById('ex-cat-input').value;
     ex.tag=document.getElementById('ex-tag-input').value.trim();
@@ -3120,8 +2838,8 @@ function saveExercise(){
     ex.customReps=customReps;
     ex.uniformReps=uniformReps;
     ex.perSetReps=perSetReps;
-    // Reset today's sets only if the number of sets changed
-    if(setsChanged) ex.setsLoggedToday=new Array(sets).fill(false);
+    // Reset daily if sets changed
+    ex.setsLoggedToday=new Array(sets).fill(false);
   } else {
     state.exercises.push({
       id:generateId(),
@@ -3220,13 +2938,10 @@ function confirmProgress(){
   }
   // If both blank, keep existing reps
 
-  // Reset streak: only days completed after this moment count from now on
-  ensureDailyReset(ex);
-  ex.progressedAt=Date.now();
-  ex.streakBase=0;
+  // Reset streak
+  ex.streak=0;
   ex.setsLoggedToday=new Array(ex.sets).fill(false);
-  syncTodayToLog(ex);
-  ex.streak=computeStreak(ex);
+  ex.lastLoggedDate=null;
 
   saveState();
   closeOverlay('prog-overlay');
@@ -3595,347 +3310,6 @@ function openThemePicker(){
 }
 
 // ══════════════════════════════════════════════
-// BACKUP (export / import a file)
-// ══════════════════════════════════════════════
-function exportBackup(){
-  try{
-    const data = { app:'SimpleWorkout', version:1, exportedAt:new Date().toISOString(), state:JSON.parse(JSON.stringify(state)) };
-    const name = `simpleworkout-backup-${todayStr()}.json`;
-    const blob = new Blob([JSON.stringify(data,null,1)], {type:'application/json'});
-    const touch = window.matchMedia && window.matchMedia('(pointer:coarse)').matches;
-    let file = null;
-    try{ file = new File([blob], name, {type:'application/json'}); }catch(e){}
-    // On phones, the share sheet lets you "Save to Files" / Drive / email it
-    if(touch && file && navigator.canShare && navigator.canShare({files:[file]})){
-      navigator.share({files:[file], title:'SimpleWorkout backup'})
-        .then(()=>showToast('Backup ready ✓'))
-        .catch(err=>{ if(err && err.name!=='AbortError') downloadBlob(blob,name); });
-      return;
-    }
-    downloadBlob(blob,name);
-  }catch(e){ showToast('Could not create backup'); }
-}
-function downloadBlob(blob,name){
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob); a.download=name;
-  document.body.appendChild(a); a.click();
-  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
-  showToast('Backup downloaded ✓');
-}
-function importBackup(input){
-  const f = input.files && input.files[0];
-  input.value='';
-  if(!f) return;
-  const reader = new FileReader();
-  reader.onload = ()=>{
-    let obj;
-    try{ obj = JSON.parse(reader.result); }catch(e){ showToast('That file is not a valid backup'); return; }
-    const s = obj && obj.state ? obj.state : obj;
-    if(!s || !Array.isArray(s.exercises)){ showToast('That file is not a valid backup'); return; }
-    const when = obj.exportedAt ? new Date(obj.exportedAt).toLocaleString() : 'unknown date';
-    if(!confirm(`Restore this backup?\n\nFrom: ${when}\nExercises: ${s.exercises.length}\n\nEverything on this device will be replaced.`)) return;
-    state = s;
-    state.pristine = false;
-    if(!state.timers) state.timers = { enabled:true, slots:[{on:true,secs:90},{on:false,secs:120},{on:false,secs:60}] };
-    migrateState();
-    state.exercises.forEach(ex=>{ delete ex._bufDay; ensureDailyReset(ex); });
-    applyTheme(state.theme||'fullblack');
-    saveState();
-    closeOverlay('settings-overlay');
-    renderAll();
-    showToast('Backup restored ✓');
-  };
-  reader.onerror = ()=>showToast('Could not read that file');
-  reader.readAsText(f);
-}
-
-// ══════════════════════════════════════════════
-// CLOUD SYNC — merge logic (Firebase calls live in the module script below)
-// ══════════════════════════════════════════════
-// Stable JSON (sorted keys) so the same data always compares equal
-function canon(v){
-  if(Array.isArray(v)) return '['+v.map(canon).join(',')+']';
-  if(v && typeof v==='object') return '{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+canon(v[k])).join(',')+'}';
-  return JSON.stringify(v===undefined?null:v);
-}
-
-function remoteToLocal(r){
-  return {
-    id:r.id, name:r.name||'', cat:r.cat||'Uncategorized', tag:r.tag||'', weight:r.weight||'',
-    sets:r.sets||3, repRange:r.repRange||'', rest:r.rest||90,
-    uniformReps:r.uniformReps||10, customReps:!!r.customReps, perSetReps:r.perSetReps||[],
-    progressHistory:r.progressHistory||[], log:r.log||{},
-    streakBase:r.streakBase||0, progressedAt:r.progressedAt||0, updatedAt:r.updatedAt||0,
-    streak:0, setsLoggedToday:[], lastLoggedDate:null, lastTouched:false,
-  };
-}
-function mergeLogs(a,b){
-  const out={}; a=a||{}; b=b||{};
-  new Set([...Object.keys(a),...Object.keys(b)]).forEach(d=>{
-    const x=a[d], y=b[d];
-    if(!x){ out[d]=y; return; }
-    if(!y){ out[d]=x; return; }
-    if((x.t||0)!==(y.t||0)) out[d] = (x.t||0)>(y.t||0) ? x : y;
-    else out[d] = (x.s||[]).filter(Boolean).length >= (y.s||[]).filter(Boolean).length ? x : y;
-  });
-  return out;
-}
-function ensureCategoriesFromExercises(){
-  state.exercises.forEach(ex=>{
-    const c=ex.cat||'Uncategorized';
-    if(!state.categories.includes(c)){
-      if(c==='Uncategorized') state.categories.unshift(c); else state.categories.push(c);
-    }
-  });
-  if(state.activeCat!=='All' && !state.categories.includes(state.activeCat)) state.activeCat='All';
-}
-function applyRemoteSettings(rs){
-  if(rs.title) state.title = rs.title;
-  if(rs.theme) state.theme = rs.theme;
-  if(rs.streakThreshold) state.streakThreshold = rs.streakThreshold;
-  if(Array.isArray(rs.categories)) state.categories = rs.categories.slice();
-  state.catColors = rs.catColors || {};
-  if(!state.timers) state.timers = { enabled:true, slots:[{on:true,secs:90},{on:false,secs:120},{on:false,secs:60}] };
-  if(typeof rs.timersEnabled==='boolean') state.timers.enabled = rs.timersEnabled;
-  if(rs.alarm) state.timers.alarm = rs.alarm;
-  if(Array.isArray(rs.order)){
-    const pos = {}; rs.order.forEach((id,i)=>pos[id]=i);
-    const known = state.exercises.filter(e=>pos[e.id]!==undefined).sort((a,b)=>pos[a.id]-pos[b.id]);
-    const rest = state.exercises.filter(e=>pos[e.id]===undefined);
-    state.exercises = [...known, ...rest];
-  }
-  state.settingsUpdatedAt = rs.updatedAt || 0;
-}
-function settingsFromRemote(rs){
-  // Same shape as settingsPayload(), for comparing
-  const keep = {}; ['title','theme','streakThreshold','categories','catColors','timersEnabled','alarm','order'].forEach(k=>{ keep[k] = rs[k]===undefined?null:rs[k]; });
-  return keep;
-}
-
-// mode: 'replace' = cloud wins entirely, 'merge' = combine (newest wins per exercise)
-function applyRemote(remoteSettings, remoteExs, mode){
-  if(mode==='replace'){
-    state.exercises = remoteExs.filter(r=>!r.deleted).map(remoteToLocal);
-    syncMeta.fp = {}; syncMeta.dirty = {}; syncMeta.tomb = {};
-    remoteExs.forEach(r=>{ if(r.deleted) syncMeta.tomb[r.id] = r.updatedAt||0; });
-    if(remoteSettings) applyRemoteSettings(remoteSettings);
-  } else {
-    const byId = {}; state.exercises.forEach(e=>byId[e.id]=e);
-    const inRemote = {};
-    remoteExs.forEach(r=>{
-      inRemote[r.id]=true;
-      const L = byId[r.id], rt = r.updatedAt||0;
-      if(r.deleted){
-        if(!L){ syncMeta.tomb[r.id] = Math.max(syncMeta.tomb[r.id]||0, rt); if((syncMeta.tomb[r.id]||0)<=rt) delete syncMeta.dirty[r.id]; return; }
-        if(rt >= (L.updatedAt||0)){
-          state.exercises = state.exercises.filter(e=>e.id!==r.id);
-          delete byId[r.id]; delete syncMeta.fp[r.id]; delete syncMeta.dirty[r.id];
-          syncMeta.tomb[r.id] = rt;
-        } else syncMeta.dirty[r.id]=1; // edited here after it was deleted elsewhere → keep it
-        return;
-      }
-      if(!L){
-        if((syncMeta.tomb[r.id]||0) >= rt){ syncMeta.dirty[r.id]=1; return; } // deleted here more recently
-        const ex = remoteToLocal(r);
-        state.exercises.push(ex); byId[r.id]=ex;
-        delete syncMeta.tomb[r.id];
-        return;
-      }
-      if(rt > (L.updatedAt||0)){
-        const R = remoteToLocal(r);
-        ['name','cat','tag','weight','sets','repRange','rest','uniformReps','customReps','perSetReps','progressHistory','streakBase','progressedAt'].forEach(k=>L[k]=R[k]);
-      }
-      L.log = mergeLogs(L.log, r.log);
-      L.updatedAt = Math.max(L.updatedAt||0, rt);
-    });
-    // Local exercises the cloud has never seen → upload
-    state.exercises.forEach(e=>{ if(!inRemote[e.id]) syncMeta.dirty[e.id]=1; });
-    if(remoteSettings && (remoteSettings.updatedAt||0) > (state.settingsUpdatedAt||0)) applyRemoteSettings(remoteSettings);
-  }
-  // Fingerprints: anything that now differs from the cloud copy gets uploaded
-  const remoteById = {}; remoteExs.forEach(r=>remoteById[r.id]=r);
-  state.exercises.forEach(ex=>{
-    const fp = canon(exPayload(ex));
-    syncMeta.fp[ex.id] = fp;
-    const r = remoteById[ex.id];
-    if(!r || r.deleted || canon(exPayload(remoteToLocal(r)))!==fp || (r.updatedAt||0)!==(ex.updatedAt||0)) syncMeta.dirty[ex.id]=1;
-    else delete syncMeta.dirty[ex.id];
-  });
-  ensureCategoriesFromExercises();
-  const sfp = canon(settingsPayload());
-  syncMeta.settingsFp = sfp;
-  syncMeta.settingsDirty = !remoteSettings || canon(settingsFromRemote(remoteSettings))!==sfp;
-  if(!state.settingsUpdatedAt) state.settingsUpdatedAt = Date.now();
-  state.pristine = false;
-  state.exercises.forEach(ex=>ensureDailyReset(ex));
-  applyTheme(state.theme||'fullblack');
-  persistState();
-  renderAll();
-}
-
-// What needs uploading right now
-function buildPush(){
-  const items = [];
-  const byId = {}; state.exercises.forEach(e=>byId[e.id]=e);
-  Object.keys(syncMeta.dirty).forEach(id=>{
-    const ex = byId[id];
-    if(ex) items.push({ id, data:Object.assign(exPayload(ex), {updatedAt:ex.updatedAt||Date.now(), deleted:false}), snap:syncMeta.fp[id] });
-    else if(syncMeta.tomb[id]) items.push({ id, data:{deleted:true, updatedAt:syncMeta.tomb[id]}, snap:'tomb:'+syncMeta.tomb[id] });
-    else delete syncMeta.dirty[id];
-  });
-  const settings = syncMeta.settingsDirty
-    ? { data:Object.assign(settingsPayload(), {updatedAt:state.settingsUpdatedAt||Date.now(), schema:1}), snap:syncMeta.settingsFp }
-    : null;
-  return { items, settings };
-}
-// Clear the "waiting" flag only for things that didn't change again while uploading
-function markPushed(p){
-  p.items.forEach(it=>{
-    const cur = syncMeta.fp[it.id]!==undefined ? syncMeta.fp[it.id] : (syncMeta.tomb[it.id] ? 'tomb:'+syncMeta.tomb[it.id] : null);
-    if(cur===it.snap) delete syncMeta.dirty[it.id];
-  });
-  if(p.settings && syncMeta.settingsFp===p.settings.snap) syncMeta.settingsDirty = false;
-  syncMeta.lastSync = Date.now();
-  persistSyncMeta();
-}
-function pendingCount(){ return Object.keys(syncMeta.dirty).length + (syncMeta.settingsDirty?1:0); }
-
-// ══════════════════════════════════════════════
-// ACCOUNT UI
-// ══════════════════════════════════════════════
-// The module script fills this in: { ready, loadFailed, user:{email,verified,isPassword}|null, status, error }
-window.cloudInfo = { ready:false, loadFailed:false, user:null, status:'off', error:'' };
-
-function escHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-function cloudCall(name, ...args){
-  if(window.Cloud && typeof window.Cloud[name]==='function') return window.Cloud[name](...args);
-  showToast(navigator.onLine ? 'Sign-in is still loading — try again in a moment' : 'You are offline — connect to sign in');
-  if(typeof window.cloudLoad==='function') window.cloudLoad();
-}
-
-function syncStatusText(){
-  const ci = window.cloudInfo;
-  const n = pendingCount();
-  switch(ci.status){
-    case 'synced':  return '✓ All changes synced' + (syncMeta.lastSync ? ' · ' + new Date(syncMeta.lastSync).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'}) : '');
-    case 'syncing': return 'Syncing…';
-    case 'pending': return `${n} change${n===1?'':'s'} waiting to sync`;
-    case 'offline': return n ? `Offline — ${n} change${n===1?'':'s'} saved on this device, will sync when back online` : 'Offline — will sync when back online';
-    case 'verify':  return 'Verify your email to start syncing';
-    case 'error':   return 'Sync problem: ' + (ci.error||'unknown') + ' — your data is safe on this device';
-    default:        return 'Not signed in — saved on this device only';
-  }
-}
-
-function renderCloudUI(){
-  const ci = window.cloudInfo;
-  const btn = document.getElementById('sync-btn');
-  if(btn) btn.dataset.s = ci.user ? ci.status : 'off';
-  const prev = document.getElementById('settings-account-preview');
-  if(prev) prev.textContent = ci.user ? (ci.user.email||'Signed in') + ' · ' + syncStatusText() : 'Not signed in — saved on this device';
-  if(document.getElementById('account-overlay').classList.contains('show')) renderAccountBody();
-}
-
-function renderAccountBody(){
-  const ci = window.cloudInfo;
-  const body = document.getElementById('acct-body');
-  const u = ci.user;
-  if(u && u.isPassword && !u.verified){
-    body.innerHTML = `
-      <div class="acct-box">
-        <div class="acct-email">${escHtml(u.email)}</div>
-        <div class="acct-status">📧 We sent a verification link to this email. Open it, then tap <b>I've verified</b>. Check spam if you don't see it. Syncing starts after you verify.</div>
-      </div>
-      <button class="action-btn btn-primary" onclick="cloudCall('checkVerified')">I've verified</button>
-      <button class="action-btn btn-secondary" onclick="cloudCall('resendVerification')" style="margin-top:8px">Resend email</button>
-      <button class="acct-link" onclick="cloudCall('signOut')">Sign out</button>`;
-    return;
-  }
-  if(u){
-    body.innerHTML = `
-      <div class="acct-box">
-        <div class="acct-email">${escHtml(u.email||'Signed in')}</div>
-        <div class="acct-status">${escHtml(syncStatusText())}</div>
-      </div>
-      <div class="acct-note">Every change saves on this phone first, then uploads when you're online. Changes made offline upload the next time the app is open with internet.</div>
-      <button class="action-btn btn-primary" onclick="cloudCall('syncNow', true)">Sync now</button>
-      <button class="action-btn btn-secondary" onclick="cloudCall('signOut')" style="margin-top:8px">Sign out</button>
-      <div class="acct-note">Signing out keeps your workouts on this device.</div>
-      <button class="acct-link" style="color:#ff5050" onclick="openDeleteAccount()">Delete account &amp; cloud data…</button>`;
-    return;
-  }
-  if(!ci.ready){
-    body.innerHTML = ci.loadFailed
-      ? `<div class="acct-note" style="font-size:13px">Can't reach the sign-in service${navigator.onLine?'':' — you are offline'}. Your workouts are still saved on this device.</div>
-         <button class="action-btn btn-secondary" onclick="window.cloudLoad && window.cloudLoad(true)">Try again</button>`
-      : `<div class="acct-note" style="font-size:13px">Loading sign-in…</div>`;
-    return;
-  }
-  body.innerHTML = `
-    <div class="acct-note" style="font-size:12px;padding-top:12px">Signing in is optional. It backs up your workouts and syncs them across your devices. Without it, everything stays saved on this device.</div>
-    <button class="action-btn btn-google" onclick="cloudCall('signInGoogle')">
-      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
-      Continue with Google
-    </button>
-    <div class="or-sep">or use email</div>
-    <div class="form-group"><input class="form-input" id="acct-email" type="email" placeholder="Email" autocomplete="email" inputmode="email" autocapitalize="off"></div>
-    <div class="form-group"><input class="form-input" id="acct-pw" type="password" placeholder="Password (6+ characters)" autocomplete="current-password"></div>
-    <div style="display:flex;gap:10px;padding:0 20px">
-      <button class="action-btn btn-primary" style="margin:14px 0 0;width:auto;flex:1" onclick="acctEmail('signIn')">Sign in</button>
-      <button class="action-btn btn-secondary" style="margin:14px 0 0;width:auto;flex:1" onclick="acctEmail('signUp')">Create account</button>
-    </div>
-    <button class="acct-link" onclick="acctEmail('reset')">Forgot password?</button>`;
-}
-
-function acctEmail(kind){
-  const email = (document.getElementById('acct-email')||{}).value||'';
-  const pw = (document.getElementById('acct-pw')||{}).value||'';
-  if(!email.trim()){ showToast('Enter your email'); return; }
-  if(kind==='reset'){ cloudCall('resetPassword', email.trim()); return; }
-  if(pw.length<6){ showToast('Password must be at least 6 characters'); return; }
-  cloudCall(kind==='signUp'?'signUpEmail':'signInEmail', email.trim(), pw);
-}
-
-function openAccount(){
-  renderAccountBody();
-  document.getElementById('account-overlay').classList.add('show');
-  if(typeof window.cloudLoad==='function') window.cloudLoad();
-}
-
-function openDeleteAccount(){
-  const u = window.cloudInfo.user;
-  document.getElementById('delacct-pw-wrap').style.display = (u && u.isPassword) ? 'block' : 'none';
-  document.getElementById('delacct-pw').value = '';
-  document.getElementById('delacct-local').checked = false;
-  document.getElementById('delacct-overlay').classList.add('show');
-}
-function confirmDeleteAccount(){
-  const pw = document.getElementById('delacct-pw').value;
-  const eraseLocal = document.getElementById('delacct-local').checked;
-  const u = window.cloudInfo.user;
-  if(u && u.isPassword && !pw){ showToast('Enter your password to confirm'); return; }
-  cloudCall('deleteAccount', pw, eraseLocal);
-}
-function eraseThisDevice(){
-  try{ localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(SYNC_KEY); }catch(e){}
-  location.reload();
-}
-
-let linkResolver = null;
-window.askLinkChoice = function(){
-  return new Promise(res=>{
-    linkResolver = res;
-    closeOverlay('account-overlay');
-    document.getElementById('link-overlay').classList.add('show');
-  });
-};
-function resolveLinkChoice(choice){
-  closeOverlay('link-overlay');
-  if(linkResolver){ const r=linkResolver; linkResolver=null; r(choice); }
-}
-
-// ══════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════
 loadState();
@@ -3979,15 +3353,6 @@ document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) checkDa
 window.addEventListener('pageshow', checkDayRollover);
 setInterval(checkDayRollover, 60000);
 
-renderCloudUI();
-
-// Ask the browser not to clear this app's saved data when space runs low
-try{
-  if(navigator.storage && navigator.storage.persist){
-    navigator.storage.persisted().then(p=>{ if(!p) navigator.storage.persist(); }).catch(()=>{});
-  }
-}catch(e){}
-
 // ── Service worker (offline support) ──
 // Only on https (GitHub Pages) or localhost; skipped when opened as a local file.
 if ('serviceWorker' in navigator &&
@@ -3996,291 +3361,6 @@ if ('serviceWorker' in navigator &&
     navigator.serviceWorker.register('sw.js').catch(()=>{});
   });
 }
-</script>
-
-<!-- ══════════════════════════════════════════════
-     CLOUD: Firebase sign-in + sync
-     The app works fully without this. If it can't load (offline),
-     everything still saves on the device and syncs later.
-     ══════════════════════════════════════════════ -->
-<script type="module">
-const FB_VER = '12.18.0';
-const firebaseConfig = {
-  apiKey: "AIzaSyArRjyycqBFA2GmbRemzq-oAYVmnvCgLS8",
-  authDomain: "simpleworkout-app.firebaseapp.com",
-  projectId: "simpleworkout-app",
-  storageBucket: "simpleworkout-app.firebasestorage.app",
-  messagingSenderId: "45342211878",
-  appId: "1:45342211878:web:fe71891fa1c739f25ccbe7"
-};
-
-const ci = window.cloudInfo;
-let fb = null, loading = null;
-let running = false, again = null, kickTimer = null, lastPull = 0;
-
-function setStatus(s, err){
-  ci.status = s;
-  if(err !== undefined) ci.error = err;
-  window.renderCloudUI();
-}
-function idleStatus(){
-  if(!navigator.onLine) return 'offline';
-  return pendingCount() ? 'pending' : 'synced';
-}
-
-function friendly(e){
-  const c = (e && e.code) || '';
-  const map = {
-    'auth/invalid-credential':'Wrong email or password',
-    'auth/wrong-password':'Wrong email or password',
-    'auth/user-not-found':'Wrong email or password',
-    'auth/invalid-email':'That email address looks invalid',
-    'auth/email-already-in-use':'An account with this email already exists — tap Sign in',
-    'auth/weak-password':'Password is too weak (use 6+ characters)',
-    'auth/too-many-requests':'Too many attempts — wait a few minutes and try again',
-    'auth/network-request-failed':'No internet connection',
-    'auth/popup-blocked':'The sign-in window was blocked — allow pop-ups, or use email instead',
-    'auth/operation-not-supported-in-this-environment':'Google sign-in is not supported here — open the app in Safari/Chrome, or use email',
-    'auth/unauthorized-domain':'This website is not authorized in Firebase (check Authorized domains)',
-    'auth/requires-recent-login':'For security, sign out, sign in again, then retry',
-    'auth/user-mismatch':'That is a different account than the one signed in',
-    'permission-denied':'Permission denied (are the Firestore rules published?)',
-    'unavailable':'Cloud is unreachable right now',
-    'timeout':'The connection is too slow — will retry',
-  };
-  return map[c] || map[String(c).replace('firestore/','')] || (e && e.message) || 'Something went wrong';
-}
-function withTimeout(p, ms){
-  return Promise.race([p, new Promise((_,rej)=>setTimeout(()=>rej({code:'timeout'}), ms))]);
-}
-
-// ── Load Firebase (cached by sw.js so it also loads offline) ──
-function load(){
-  if(fb) return Promise.resolve(fb);
-  if(loading) return loading;
-  ci.loadFailed = false;
-  const base = `https://www.gstatic.com/firebasejs/${FB_VER}/`;
-  loading = Promise.all([
-    import(base+'firebase-app.js'),
-    import(base+'firebase-auth.js'),
-    import(base+'firebase-firestore.js'),
-  ]).then(([appM, A, F])=>{
-    const app = appM.initializeApp(firebaseConfig);
-    const auth = A.getAuth(app);
-    const db = F.getFirestore(app);
-    fb = { A, F, auth, db };
-    ci.ready = true;
-    A.onAuthStateChanged(auth, onUser);
-    window.renderCloudUI();
-    return fb;
-  }).catch(e=>{
-    loading = null;
-    ci.loadFailed = true;
-    window.renderCloudUI();
-    throw e;
-  });
-  return loading;
-}
-window.cloudLoad = ()=>load().catch(()=>{});
-
-function onUser(user){
-  if(!user){ ci.user = null; setStatus('off',''); return; }
-  const hasGoogle = user.providerData.some(p=>p.providerId==='google.com');
-  ci.user = { email:user.email, verified:user.emailVerified, isPassword:!hasGoogle };
-  if(!user.emailVerified){ setStatus('verify',''); return; }
-  sync({pull:true});
-}
-function canSync(){ return !!(fb && fb.auth.currentUser && fb.auth.currentUser.emailVerified); }
-
-// ── Cloud reads/writes ──
-async function fetchRemote(uid){
-  const { doc, getDoc, getDocs, collection } = fb.F;
-  const [sSnap, exSnap] = await withTimeout(Promise.all([
-    getDoc(doc(fb.db,'users',uid)),
-    getDocs(collection(fb.db,'users',uid,'exercises')),
-  ]), 20000);
-  return {
-    settings: sSnap.exists() ? sSnap.data() : null,
-    exs: exSnap.docs.map(d=>Object.assign({id:d.id}, d.data())),
-  };
-}
-async function push(uid){
-  const p = buildPush();
-  if(!p.items.length && !p.settings){ syncMeta.lastSync = Date.now(); persistSyncMeta(); return; }
-  const { doc, writeBatch } = fb.F;
-  // Firestore batches hold up to 500 writes
-  for(let i=0; i<Math.max(1,p.items.length); i+=400){
-    const batch = writeBatch(fb.db);
-    p.items.slice(i,i+400).forEach(it=>batch.set(doc(fb.db,'users',uid,'exercises',it.id), it.data));
-    if(i===0 && p.settings) batch.set(doc(fb.db,'users',uid), p.settings.data);
-    await withTimeout(batch.commit(), 20000);
-  }
-  markPushed(p);
-}
-
-// First sign-in on this device (or a different account): never let starter
-// data overwrite real cloud data.
-async function firstLink(uid){
-  const r = await fetchRemote(uid);
-  const hasRemote = !!r.settings || r.exs.some(x=>!x.deleted);
-  if(!hasRemote){
-    // Empty account → upload everything from this device
-    state.exercises.forEach(e=>syncMeta.dirty[e.id]=1);
-    syncMeta.tomb = {};
-    Object.keys(syncMeta.dirty).forEach(id=>{ if(!state.exercises.some(e=>e.id===id)) delete syncMeta.dirty[id]; });
-    syncMeta.settingsDirty = true;
-  } else if(state.pristine){
-    applyRemote(r.settings, r.exs, 'replace');      // fresh device → take the cloud data
-  } else {
-    const choice = await window.askLinkChoice();   // both have data → ask
-    if(choice==='cancel'){ await fb.A.signOut(fb.auth); showToast('Signed out — nothing was changed'); return false; }
-    applyRemote(r.settings, r.exs, choice);
-  }
-  syncMeta.linkedUid = uid;
-  state.pristine = false;
-  persistState();
-  lastPull = Date.now();
-  return true;
-}
-
-async function sync(opts={}){
-  if(!canSync()) return;
-  if(!navigator.onLine){ setStatus('offline'); return; }
-  if(running){ again = { pull: (again&&again.pull) || !!opts.pull, manual: (again&&again.manual) || !!opts.manual }; return; }
-  running = true;
-  setStatus('syncing');
-  try{
-    const uid = fb.auth.currentUser.uid;
-    if(syncMeta.linkedUid !== uid){
-      const ok = await firstLink(uid);
-      if(!ok) return;
-    } else if(opts.pull){
-      const r = await fetchRemote(uid);
-      applyRemote(r.settings, r.exs, 'merge');
-      lastPull = Date.now();
-    }
-    await push(uid);
-    setStatus(idleStatus(), '');
-    if(opts.manual) showToast('✓ Synced');
-  }catch(e){
-    console.warn('sync failed', e);
-    setStatus(navigator.onLine ? 'error' : 'offline', friendly(e));
-    if(opts.manual) showToast(friendly(e));
-  }finally{
-    running = false;
-    if(again){ const a = again; again = null; setTimeout(()=>sync(a), 300); }
-  }
-}
-
-// Called by saveState() after every change: upload shortly after
-window.cloudKick = function(){
-  if(!ci.user) return;
-  if(!canSync()){ window.renderCloudUI(); return; }
-  if(!navigator.onLine){ setStatus('offline'); return; }
-  setStatus('pending');
-  clearTimeout(kickTimer);
-  kickTimer = setTimeout(()=>sync({pull:false}), 800);
-};
-
-window.addEventListener('online',  ()=>{ load().then(()=>sync({pull:true})).catch(()=>{}); });
-window.addEventListener('offline', ()=>{ if(ci.user) setStatus('offline'); });
-document.addEventListener('visibilitychange', ()=>{
-  if(!document.hidden && canSync() && Date.now()-lastPull > 20000) sync({pull:true});
-});
-
-// ── Actions used by the Account sheet ──
-window.Cloud = {
-  async signInGoogle(){
-    try{
-      await load();
-      const p = new fb.A.GoogleAuthProvider();
-      p.setCustomParameters({ prompt:'select_account' });
-      await fb.A.signInWithPopup(fb.auth, p);
-      showToast('Signed in ✓');
-    }catch(e){
-      if(e && (e.code==='auth/popup-closed-by-user' || e.code==='auth/cancelled-popup-request')) return;
-      showToast(friendly(e));
-    }
-  },
-  async signInEmail(email, pw){
-    try{ await load(); await fb.A.signInWithEmailAndPassword(fb.auth, email, pw); showToast('Signed in ✓'); }
-    catch(e){ showToast(friendly(e)); }
-  },
-  async signUpEmail(email, pw){
-    try{
-      await load();
-      const cred = await fb.A.createUserWithEmailAndPassword(fb.auth, email, pw);
-      await fb.A.sendEmailVerification(cred.user);
-      showToast('Account created — check your email to verify');
-    }catch(e){ showToast(friendly(e)); }
-  },
-  async resetPassword(email){
-    try{ await load(); await fb.A.sendPasswordResetEmail(fb.auth, email); showToast('If that account exists, a reset link was sent'); }
-    catch(e){ showToast(friendly(e)); }
-  },
-  async resendVerification(){
-    try{ await fb.A.sendEmailVerification(fb.auth.currentUser); showToast('Verification email sent'); }
-    catch(e){ showToast(friendly(e)); }
-  },
-  async checkVerified(){
-    try{
-      const u = fb.auth.currentUser; if(!u) return;
-      await u.reload();
-      if(u.emailVerified){
-        await u.getIdToken(true);      // refresh so the database sees "verified"
-        showToast('Email verified ✓');
-        onUser(u);
-      } else showToast('Not verified yet — open the link in the email first');
-    }catch(e){ showToast(friendly(e)); }
-  },
-  async syncNow(manual){
-    try{ await load(); }catch(e){ showToast('You are offline — changes are saved on this device'); return; }
-    if(!canSync()){ showToast('Sign in first'); return; }
-    if(!navigator.onLine){ setStatus('offline'); showToast('Offline — will sync when back online'); return; }
-    await sync({pull:true, manual:!!manual});
-  },
-  async signOut(){
-    try{
-      if(canSync() && navigator.onLine && pendingCount()) { try{ await push(fb.auth.currentUser.uid); }catch(e){} }
-      await fb.A.signOut(fb.auth);
-      showToast('Signed out — your workouts stay on this device');
-    }catch(e){ showToast(friendly(e)); }
-  },
-  async deleteAccount(pw, eraseLocal){
-    const u = fb && fb.auth.currentUser;
-    if(!u) return;
-    if(!navigator.onLine){ showToast('Connect to the internet to delete your account'); return; }
-    try{
-      // Confirm identity first so the final delete can't fail halfway
-      if(u.providerData.some(p=>p.providerId==='google.com')) await fb.A.reauthenticateWithPopup(u, new fb.A.GoogleAuthProvider());
-      else await fb.A.reauthenticateWithCredential(u, fb.A.EmailAuthProvider.credential(u.email, pw));
-      if(u.emailVerified){
-        const { doc, getDocs, collection, writeBatch } = fb.F;
-        const snap = await getDocs(collection(fb.db,'users',u.uid,'exercises'));
-        const docs = snap.docs;
-        for(let i=0;i<docs.length;i+=400){
-          const b = writeBatch(fb.db);
-          docs.slice(i,i+400).forEach(d=>b.delete(d.ref));
-          await b.commit();
-        }
-        const b2 = writeBatch(fb.db); b2.delete(doc(fb.db,'users',u.uid)); await b2.commit();
-      }
-      await fb.A.deleteUser(u);
-      syncMeta.linkedUid = null; syncMeta.fp = {}; syncMeta.dirty = {}; syncMeta.tomb = {};
-      syncMeta.settingsFp = null; syncMeta.settingsDirty = false; syncMeta.lastSync = 0;
-      persistSyncMeta();
-      closeOverlay('delacct-overlay'); closeOverlay('account-overlay');
-      showToast('Account and cloud data deleted');
-      if(eraseLocal) setTimeout(eraseThisDevice, 800);
-    }catch(e){
-      if(e && (e.code==='auth/popup-closed-by-user' || e.code==='auth/cancelled-popup-request')) return;
-      showToast(friendly(e));
-    }
-  },
-};
-
-// Start loading right away (doesn't block the app)
-load().catch(()=>{});
 </script>
 </body>
 </html>
