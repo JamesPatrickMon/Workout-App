@@ -1672,7 +1672,14 @@ function loadState(){
 }
 
 // ── Today check ──
-function todayStr(){return new Date().toISOString().split('T')[0];}
+// Uses the phone's LOCAL date (YYYY-MM-DD). toISOString() is UTC, which made
+// the day reset at 8 AM in UTC+8 (Philippines). This resets at local midnight.
+function todayStr(d=new Date()){
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,'0');
+  const day=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
 
 function ensureDailyReset(ex){
   const today=todayStr();
@@ -3330,6 +3337,30 @@ if (!state.timers) {
 // Apply saved theme on load
 applyTheme(state.theme || 'fullblack');
 renderAll();
+
+// ── Local-midnight rollover ──
+// If the app stays open (or is resumed from the background) past midnight,
+// refresh so yesterday's ticked sets clear without needing a reload.
+let lastRenderDay = todayStr();
+function checkDayRollover(){
+  const now = todayStr();
+  if (now === lastRenderDay) return;
+  if (dragState || catDragState) return; // never interrupt a drag; retry next tick
+  lastRenderDay = now;
+  renderExerciseList();
+}
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) checkDayRollover(); });
+window.addEventListener('pageshow', checkDayRollover);
+setInterval(checkDayRollover, 60000);
+
+// ── Service worker (offline support) ──
+// Only on https (GitHub Pages) or localhost; skipped when opened as a local file.
+if ('serviceWorker' in navigator &&
+    (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
 </script>
 </body>
 </html>
