@@ -7,9 +7,15 @@
 //
 // When you change sw.js itself, bump CACHE_VERSION.
 
-const CACHE_VERSION = 'workout-v1';
+const CACHE_VERSION = 'workout-v2';
 const APP_SHELL = ['./', './index.html'];
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
+
+// Firebase SDK files are versioned (…/firebasejs/12.18.0/…) and never change,
+// so they're cached on first load. That lets sign-in restore offline.
+function isFirebaseSdk(url){
+  return url.hostname === 'www.gstatic.com' && url.pathname.startsWith('/firebasejs/');
+}
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -32,8 +38,8 @@ self.addEventListener('fetch', event => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
 
-  // Google Fonts: cache first
-  if (FONT_HOSTS.includes(url.hostname)) {
+  // Google Fonts + Firebase SDK: cache first
+  if (FONT_HOSTS.includes(url.hostname) || isFirebaseSdk(url)) {
     event.respondWith(
       caches.match(req).then(hit => hit || fetch(req).then(res => {
         if (res && (res.ok || res.type === 'opaque')) {
